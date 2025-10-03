@@ -1,16 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\ShopifyController;
+use App\Http\Controllers\ProductController;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+/* GET METHODS HERE */
+Route::get("/auth/shopify/redirect", [ShopifyController::class, "redirect_to_shopify"]);
+Route::get("/auth/shopify/handle", [ShopifyController::class, "handle_shopify_auth"]);
+Route::get("/product", [ProductController::class, "get_all"]);
+Route::get("/product/:id", [ProductController::class, "get_by_id"]);
 
-Route::get('/products', function () {
-    return Inertia::render('products');
-})->name('products');
+/* POST METHODS HERE */
+Route::post("/product", [ProductController::class, "create"]);
 
-Route::get('/help', function () {
-    return Inertia::render('help');
-})->name('help');
+/* PUT METHODS HERE */
+Route::put("/product/update", [ProductController::class, "update"]);
+
+/* DELETE METHODS HERE */
+Route::delete("/product/:id", [ProductController::class, "destroy"]);
+
+/* REDIRECTS */
+Route::redirect('/', '/product');
