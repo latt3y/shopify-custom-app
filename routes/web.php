@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 /* GET METHODS HERE */
 Route::get("/auth/shopify/redirect", [ShopifyController::class, "redirect_to_shopify"]);
 Route::get("/auth/shopify/handle", [ShopifyController::class, "handle_shopify_auth"]);
+
 Route::get("/product", [ProductController::class, "get_all"]);
 Route::get("/product/:id", [ProductController::class, "get_by_id"]);
 
