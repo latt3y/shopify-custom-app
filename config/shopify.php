@@ -6,13 +6,13 @@ return [
    * TODO:
    * Explain what it does, if there is time left
    * */
-  "scopes" => env("SHOPIFY_SCOPES"),
+  "scopes" => env("SHOPIFY_API_SCOPES"),
 
   /*
    * TODO:
    * Explain what it does, if there is time left
    * */
-  "client_id" => env("SHOPIFY_CLIENT_ID"),
+  "api_key" => env("SHOPIFY_API_KEY"),
 
   /*
    * TODO:
@@ -24,11 +24,15 @@ return [
    * TODO:
    * Explain what it does, if there is time left
    * */
-  "store_name" => env("SHOPIFY_STORE_NAME"),
+  "shop_name" => env("SHOPIFY_MYSHOPIFY_DOMAIN"),
 
   /*
    * TODO:
    * Explain what it does, if there is time left
    * */
-  "app_uri" => ("SHOPIFY_APP_URL"),
+  "app_uri" => env("SHOPIFY_APP_URL"),
+
+  "app_name" => env("SHOPIFY_APP_NAME" , ''),
+
+  "api_version" => env("SHOPIFY_API_VERSION", '')
 ];
