@@ -5,24 +5,26 @@ use Illuminate\Http\Request;
 
 class ShopifyController extends Controller
 {
-  protected $_apiKey;
+  protected $_client_id;
   protected $_apiSecret;
   protected $_scopes;
-  protected $_redirectUri;
-  protected $uri;
+  protected $_store_name;
+  protected $_uri;
+  protected $_redirect_uri;
 
   public function __construct()
   {
-    // TODO: add these configs
-    $this->_apiKey = config();
-    $this->_scopes = config();
-    $this->_redirectUri = config();
-    $this->_apiSecret = config();
+    $this->_client_id = config("shopify.client_id");
+    $this->_scopes = config("shopify.scopes");
+    $this->_store_name = config("shopify.store_name");
+    $this->_apiSecret = config("shopify.api_secret");
+    $this->_app_uri = config("shopify.app_uri");
+    $this->_redirect_uri = "{$this->_uri}/auth/shopify/handle";
   }
 
-  private function shopify_oauth_redirect(Request $request)
+  private function shopify_oauth_redirect()
   {
-    $url = "{$this->uri}/auth?shop={$this->_redirectUri}";
+    $url = "{$this->_app_uri}/auth?shop={$this->_store_name}";
 
     // TODO: if not authenticated then redirect else proceed
     return redirect($url);
@@ -30,33 +32,27 @@ class ShopifyController extends Controller
 
   private function shopify_auth_url(String $shop)
   {
-    $k = $this->_apiKey;
-    $s = $this->_scopes;
-    $r = $this->_redirectUri;
+    $auth_query = http_build_query([
+      "client_id" => $this->_client_id,
+      "scope" => $this->_scopes,
+      "redirect_uri" => $this->_store_name,
+      "state" => "nonce",
+      "grant_options[]" => "per-user"
+    ]);
 
-    return "https://{$shop}/admin/oauth/authorize?client_id={$k}&scope={$s}&redirect_uri={$r}&state=nonce&grant_options[]=per-user";
+    return "https://{$shop}/admin/oauth/authorize?" . $auth_query;
   }
 
   public function redirect_to_shopify(Request $request) {
-    $shop = $request->get("shop");
+    $shop = $request->get("shop") ?: $this->_store_name;
 
-    if (!$shop)
-    {
-      return response()
-        ->json([
-          "message" => "failed",
-          "status" => "Shop not specified in your request",
-          "code" => 403,
-        ])
-        ->header("Content-Type", "application/json");
-    }
-
-    return redirect($this->shopify_auth_url($shop));
+    return redirect()->to($this->shopify_auth_url($shop));
   }
 
   public function handle_shopify_auth(Request $request) {
     $shop = $request->get('shop');
     $code = $request->get('code');
     $hmac = $request->get('hmac');
+
   }
 }
