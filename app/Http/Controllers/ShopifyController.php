@@ -9,8 +9,27 @@ class ShopifyController extends Controller
   protected $_apiSecret;
   protected $_scopes;
   protected $_redirectUri;
+  protected $uri;
 
-  private function shopify_auth_url(String $shop) {
+  public function __construct()
+  {
+    // TODO: add these configs
+    $this->_apiKey = config();
+    $this->_scopes = config();
+    $this->_redirectUri = config();
+    $this->_apiSecret = config();
+  }
+
+  private function shopify_oauth_redirect(Request $request)
+  {
+    $url = "{$this->uri}/auth?shop={$this->_redirectUri}";
+
+    // TODO: if not authenticated then redirect else proceed
+    return redirect($url);
+  }
+
+  private function shopify_auth_url(String $shop)
+  {
     $k = $this->_apiKey;
     $s = $this->_scopes;
     $r = $this->_redirectUri;

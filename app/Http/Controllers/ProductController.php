@@ -25,8 +25,11 @@ class ProductController extends Controller
       echo $body;
     }
 
-    public function get_by_id(Product $product)
-    {}
+    public function get_by_id(Int $id)
+    {
+      return response()
+        ->json(["product" => $this->test[$id]]);
+    }
 
     public function update(Request $request, Product $product)
     {}

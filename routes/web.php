@@ -9,7 +9,7 @@ Route::get("/auth/shopify/redirect", [ShopifyController::class, "redirect_to_sho
 Route::get("/auth/shopify/handle", [ShopifyController::class, "handle_shopify_auth"]);
 
 Route::get("/product", [ProductController::class, "get_all"]);
-Route::get("/product/:id", [ProductController::class, "get_by_id"]);
+Route::get("/product/{id}", [ProductController::class, "get_by_id"]);
 
 /* POST METHODS HERE */
 Route::post("/product", [ProductController::class, "create"]);
@@ -18,7 +18,7 @@ Route::post("/product", [ProductController::class, "create"]);
 Route::put("/product/update", [ProductController::class, "update"]);
 
 /* DELETE METHODS HERE */
-Route::delete("/product/:id", [ProductController::class, "destroy"]);
+Route::delete("/product/{id}", [ProductController::class, "destroy"]);
 
 /* REDIRECTS */
 Route::redirect('/', '/product');
