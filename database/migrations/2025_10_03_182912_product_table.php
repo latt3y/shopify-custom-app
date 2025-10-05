@@ -10,13 +10,14 @@ return new class extends Migration
     {
       Schema::create("products", function (Blueprint $table) {
         $table->id();
+        $table->bigInteger('shopify_id')->unique();
         $table->string("title");
-        $table->string("description");
+        $table->string("description")->nullable();
         $table->json("variants");
-        $table->string("image");
-
-        // Add Inventory field
-        // Add Prices field, one or multiple
+        $table->integer("inventory");
+        $table->json("images")->nullable();
+        $table->json("prices");
+        $table->timestamps();
       });
     }
 

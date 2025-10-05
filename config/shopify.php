@@ -34,5 +34,7 @@ return [
 
   "app_name" => env("SHOPIFY_APP_NAME" , ''),
 
-  "api_version" => env("SHOPIFY_API_VERSION", '')
+  "api_version" => env("SHOPIFY_API_VERSION", ''),
+
+  "webhook_topics" => env("SHOPIFY_WEBHOOK_TOPICS", '')
 ];

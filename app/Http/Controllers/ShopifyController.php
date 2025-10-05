@@ -1,7 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Shop;
+use App\Jobs\ProcessWebhookJob;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
@@ -10,9 +14,11 @@ class ShopifyController extends Controller
   protected $_api_key;
   protected $_api_secret;
   protected $_scopes;
+  protected $_api_version;
   protected $_shop_name;
   protected $_app_uri;
   protected $_redirect_uri;
+  protected $_webhook_topics;
 
   public function __construct()
   {
@@ -22,6 +28,8 @@ class ShopifyController extends Controller
     $this->_api_secret = config("shopify.api_secret");
     $this->_app_uri = config("shopify.app_uri");
     $this->_redirect_uri = "{$this->_app_uri}/auth/shopify/handle";
+    $this->_api_version = config("shopify.api_version");
+    $this->_webhook_topics = config("shopify.webhook_topics");
   }
 
   public function start_shopify_auth(Request $req)
@@ -29,7 +37,7 @@ class ShopifyController extends Controller
     $shop = $req->get("shop");
 
     if (!$shop) {
-      return abort(400, "Bad request");
+      $shop = $this->_shop_name;
     }
 
     $auth_query = http_build_query([
@@ -41,12 +49,6 @@ class ShopifyController extends Controller
     ]);
 
     return redirect()->to("https://{$shop}/admin/oauth/authorize?".$auth_query);
-  }
-
-  public function redirect_to_shopify(Request $request) {
-    $shop = $request->get("shop") ?: $this->_shop_name;
-
-    return redirect()->to($this->shopify_auth_url($shop));
   }
 
   private function is_valid_shop(String $shop) {
@@ -97,9 +99,33 @@ class ShopifyController extends Controller
       ["access_token" => $access_token]
     );
 
-    return response()->json([
-      'shop' => $shop,
-      'shop_access_token' => $access_token
+    return redirect()->route("dashboard", ["shop" => $shop]);
+  }
+
+  public function handleWebhook(Request $request) {
+    $hmac = $request->header('X-Shopify-Hmac-Sha256');
+    $shop = $request->header('X-Shopify-Shop-Domain');
+    $topic = $request->header('X-Shopify-Topic');
+    $payload = $request->getContent();
+
+    $calculated_hmac = base64_encode(hash_hmac('sha256', $payload, $this->_api_secret));
+
+    Log::info("request", [
+      "hmac" => $hmac,
+      "shop" => $shop,
+      "topic" => $topic,
+      "payload" => $payload
     ]);
+
+    if (!hash_equals($hmac, $calculated_hmac)) {
+      Log::error('HMAC mismatch!');
+      return response('Invalid HMAC', 401);
+    }
+
+    $data = json_decode($payload, true);
+
+    dispatch(new ProcessWebhookJob($payload, $topic, $shop));
+
+    return response('Webhook received', 200);
   }
 }

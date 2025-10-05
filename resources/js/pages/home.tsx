@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 export default function Welcome() {
 
   useEffect(() => {
-    console.log("Hi there");
   }, []);
 
   return (
