@@ -37,7 +37,7 @@ class ProductController extends Controller
     public function get_all_local(Request $request) {
       $products = Product::all();
 
-      return Inertia::render("product", ["products" => $products ?? []]);
+      return Inertia::render("products", ["products" => $products ?? []]);
     }
 
     public function show_by_id($id) {
@@ -46,13 +46,6 @@ class ProductController extends Controller
       Log::info("quering product by shopify_id ".$id);
 
       return Inertia::render("productDetail", ["product" => $product]);
-    }
-
-    public function create(Request $request)
-    {
-      $body = $request->body;
-
-      echo $body;
     }
 
     public function get_by_id($id)
@@ -85,10 +78,4 @@ class ProductController extends Controller
         "status" => 200,
       ]);
     }
-
-    public function update(Request $request, Product $product)
-    {}
-
-    public function destroy($id)
-    {}
 }

@@ -3,7 +3,7 @@ import type { ProductResponse, Product } from "../interface.ts";
 class _ProductSyncAPI {
   public readonly shop_key = "my-shop";
   private static _instance: _ProductSyncAPI | null = null;
-  protected base_url: string;
+  public readonly base_url: string;
   protected api_version: string;
   protected shop: string | null = null;
 
@@ -38,6 +38,7 @@ class _ProductSyncAPI {
           "X-Shopify-Shop": this.shop!,
           "Content-Type": "application/json",
           "Accept": "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
       });
 
@@ -56,6 +57,7 @@ class _ProductSyncAPI {
           "X-Shopify-Shop": this.shop!,
           "Content-Type": "application/json",
           "Accept": "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({ products: data }),
       });

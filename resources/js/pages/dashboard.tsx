@@ -21,17 +21,16 @@ function Product(props: Product) {
   return (
     <div className="border-[#d4d4d4] border-1 rounded-sm p-2 mt-1">
       <div className="flex items-center gap-3">
-        <Link href={`/product/${props.id}`}>
+        <Link className="underline" href={`/product/${props.id}`}>
           {props.title}
         </Link>
-        <p dangerouslySetInnerHTML={{ __html: props.body_html }} />
       </div>
 
       <button
         className="cursor-pointer text-sm"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        Variants: {props.options.length}
+        Options: {props.options.length}
       </button>
 
       {isExpanded && (
@@ -43,14 +42,20 @@ function Product(props: Product) {
   );
 }
 
-function Nav() {
-  const shop = ProductSyncAPI.get_shop();
+export function Nav() {
+  const [shop, setShop] = useState<string>("");
+
+  useEffect(() => {
+    if (ProductSyncAPI.get_shop()) {
+      setShop(ProductSyncAPI.get_shop()!);
+    }
+  }, []);
 
   return (
-    <nav>
+    <nav className="flex gap-6 mb-4">
       <Link
         className="text-md text-black cursor-pointer"
-        href={`/dashboard?shop${shop ?? ''}`}
+        href={`/dashboard?shop=${shop}`}
       >
         Dashboard
       </Link>
@@ -70,8 +75,6 @@ export default function Dashboard({ shop }: ServerProps) {
   const [products, _set_products] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [refreshProducts, setRefreshProducts] = useState<boolean>(false);
-
-  console.log(products);
 
   async function fetch_products() {
     setIsLoading(true);
@@ -102,10 +105,10 @@ export default function Dashboard({ shop }: ServerProps) {
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
       </Head>
 
-      <nav className="flex gap-3">
-      </nav>
-      <div className="mx-50 pt-5 min-h-screen text-black">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <Nav />
         <h1 className="text-3xl">Dashboard</h1>
+        <p className="text-sm mt-2 text-[#555]">These products are retrieved from Shopify store directly<br />Refresh if you made any update in Shopify!<br />And synchronize if you need to</p>
         <div className="mt-10 flex gap-3 items-end text-sm">
           <p>Products for shop: <a className="underline" target="_blank" href={`https://${shop}`}>{shop}</a></p>
           <button
