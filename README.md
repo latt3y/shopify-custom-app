@@ -48,6 +48,7 @@ In the working dir:
 ```
 
 ### ENVIRONMENT VARIABLES
+```
 /* scopes defined in the cusom app */
 SHOPIFY_API_SCOPES=read_products,write_products
 
@@ -55,11 +56,17 @@ SHOPIFY_API_SCOPES=read_products,write_products
 SHOPIFY_APP_URL=https://shopify-custom-app.test
 
 SHOPIFY_MYSHOPIFY_DOMAIN=[your domain].myshopify.com
+
 SHOPIFY_APP_NAME=Product-Sync
+
 SHOPIFY_API_SECRET=[SECRET KEY HERE, taken from dev dashboard->settings in partners account]
+
 SHOPIFY_API_KEY=[CLIENT_ID HERE, taken from dev dashboard->settings in partners account]
+
 SHOPIFY_API_VERSION=2025-10
+
 SHOPIFY_API_REDIRECT=/auth/shopify/handle
+
 SHOPIFY_WEBHOOK_TOPICS=product/create,product/update,product/delete
 
 /* base url of the app, change it if needed */
@@ -67,6 +74,7 @@ VITE_API_URL=https://shopify-custom-app.test
 
 /* Endpoints that use {api_version} are encoded in the client side */
 VITE_API_VERSION=2025-10
+```
 
 ### Start the server locally
 ``` composer run dev ```
