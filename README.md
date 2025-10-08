@@ -1,8 +1,7 @@
 # shopify-custom-app
-To be added
+A Laravel service for synchronizing shopify products to database!
 
 ## Git clone this repo
-
 #### Don't change the name of the folder when cloning if you want to use the specific envs for the store which is tested
 
 ### Install packages
